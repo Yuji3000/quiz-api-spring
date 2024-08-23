@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,11 @@ public class QuizController {
   @DeleteMapping("/{id}")
   public QuizResponseDto deleteQuiz(@PathVariable Long id) {
 	  return quizService.deleteQuiz(id);
+  }
+  
+  @PatchMapping("/{id}/rename/{newName}")
+  public QuizResponseDto updateQuizName(@PathVariable Long id, @PathVariable String newName) {
+	  return quizService.updateQuizName(id, newName);
   }
   
 }

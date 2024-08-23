@@ -65,4 +65,12 @@ public class QuizServiceImpl implements QuizService {
 		return quizMapper.entityToDto(quizToDelete);
 	}
 
+	@Override
+	public QuizResponseDto updateQuizName(Long id, String newName) {
+		Quiz quizToUpdate = getQuiz(id);
+		quizToUpdate.setName(newName);
+		
+		return quizMapper.entityToDto(quizRepository.saveAndFlush(quizToUpdate));
+	}
+
 }

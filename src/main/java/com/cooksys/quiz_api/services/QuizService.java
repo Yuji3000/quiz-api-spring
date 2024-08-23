@@ -14,4 +14,6 @@ public interface QuizService {
 	QuizResponseDto getQuizById(Long id);
 
 	QuizResponseDto deleteQuiz(Long id);
+
+	QuizResponseDto updateQuizName(Long id, String newName);
 }
