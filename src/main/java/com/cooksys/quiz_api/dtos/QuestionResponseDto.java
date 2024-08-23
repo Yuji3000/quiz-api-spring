@@ -11,7 +11,7 @@ public class QuestionResponseDto {
 
   private Long id;
 
-  private String text;
+  private String name;
 
   private List<AnswerResponseDto> answers;
 

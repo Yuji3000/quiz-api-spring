@@ -7,9 +7,11 @@ import com.cooksys.quiz_api.dtos.QuizResponseDto;
 
 public interface QuizService {
 
-  List<QuizResponseDto> getAllQuizzes();
+	List<QuizResponseDto> getAllQuizzes();
 
-  QuizResponseDto createQuiz(QuizRequestDto quizRequestDto);
-  
-  QuizResponseDto getQuizById(Long id);
+	QuizResponseDto createQuiz(QuizRequestDto quizRequestDto);
+
+	QuizResponseDto getQuizById(Long id);
+
+	QuizResponseDto deleteQuiz(Long id);
 }

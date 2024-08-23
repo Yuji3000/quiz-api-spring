@@ -14,10 +14,10 @@ import com.cooksys.quiz_api.mappers.QuizMapper;
 import com.cooksys.quiz_api.repositories.QuizRepository;
 import com.cooksys.quiz_api.services.QuizService;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class QuizServiceImpl implements QuizService {
 
   private final QuizRepository quizRepository;
@@ -55,6 +55,14 @@ public class QuizServiceImpl implements QuizService {
 		validateQuizRequest(quizRequestDto);
 		Quiz quizToSave = quizMapper.requestDtoToEntity(quizRequestDto);
 		return quizMapper.entityToDto(quizRepository.saveAndFlush(quizToSave));
+	}
+
+	@Override
+	public QuizResponseDto deleteQuiz(Long id) {
+		Quiz quizToDelete = getQuiz(id);
+		quizRepository.delete(quizToDelete);
+		
+		return quizMapper.entityToDto(quizToDelete);
 	}
 
 }
