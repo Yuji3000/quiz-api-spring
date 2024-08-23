@@ -97,21 +97,39 @@ public class QuizServiceImpl implements QuizService {
 		if (questionRequestDto.getText() == null) {
 			throw new BadRequestException("Text Field required for adding a question Dto to a quiz");
 		}
-		
-		   Question questionToAdd = questionMapper.requestDToEntity(questionRequestDto);
-		    questionToAdd.setQuiz(quiz);
-		    questionToAdd.setText(questionRequestDto.getText());
 
-		    List<Question> questions = quiz.getQuestions();
-		    if (questions == null) {
-		        questions = new ArrayList<>();
-		    }
-		    questions.add(questionToAdd);		    
-		    quiz.setQuestions(questions);
-		    
-		    Quiz updatedQuiz = quizRepository.saveAndFlush(quiz);
-		    return quizMapper.entityToDto(updatedQuiz);
+		Question questionToAdd = questionMapper.requestDToEntity(questionRequestDto);
+		questionToAdd.setQuiz(quiz);
+		questionToAdd.setText(questionRequestDto.getText());
+
+		List<Question> questions = quiz.getQuestions();
+		if (questions == null) {
+			questions = new ArrayList<>();
 		}
-		
+		questions.add(questionToAdd);
+		quiz.setQuestions(questions);
 
+		Quiz updatedQuiz = quizRepository.saveAndFlush(quiz);
+		return quizMapper.entityToDto(updatedQuiz);
+	}
+
+	@Override
+	public QuizResponseDto deleteQuestionFromQuiz(Long id, Long questionId) {
+		Quiz quiz = getQuiz(id);
+		List<Question> questions = quiz.getQuestions();
+
+		if (questions == null || questions.isEmpty()) {
+			throw new NotFoundException("No questions found for Quiz ID: " + id);
+		}
+
+		Question questionToRemove = questions.stream().filter(question -> question.getId().equals(questionId))
+				.findFirst().orElseThrow(() -> new NotFoundException("No Question found with ID: " + questionId));
+
+		questions.remove(questionToRemove);
+		quiz.setQuestions(questions);
+
+		quizRepository.saveAndFlush(quiz);
+
+		return quizMapper.entityToDto(quiz);
+	}
 }

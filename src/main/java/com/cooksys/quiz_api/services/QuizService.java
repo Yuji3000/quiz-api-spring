@@ -25,4 +25,6 @@ public interface QuizService {
 	QuestionResponseDto randomQuizQuestion(Long id);
 
 	QuizResponseDto addQuestionToQuiz(Long id, QuestionRequestDto questionRequestDto);
+
+	QuizResponseDto deleteQuestionFromQuiz(Long id, Long questionId);
 }
