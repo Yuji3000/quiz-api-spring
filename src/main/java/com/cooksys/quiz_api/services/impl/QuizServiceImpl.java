@@ -2,14 +2,19 @@ package com.cooksys.quiz_api.services.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.stereotype.Service;
 
+import com.cooksys.quiz_api.dtos.QuestionResponseDto;
+import com.cooksys.quiz_api.dtos.QuestionResponseDto;
 import com.cooksys.quiz_api.dtos.QuizRequestDto;
 import com.cooksys.quiz_api.dtos.QuizResponseDto;
+import com.cooksys.quiz_api.entities.Question;
 import com.cooksys.quiz_api.entities.Quiz;
 import com.cooksys.quiz_api.exceptions.BadRequestException;
 import com.cooksys.quiz_api.exceptions.NotFoundException;
+import com.cooksys.quiz_api.mappers.QuestionMapper;
 import com.cooksys.quiz_api.mappers.QuizMapper;
 import com.cooksys.quiz_api.repositories.QuizRepository;
 import com.cooksys.quiz_api.services.QuizService;
@@ -22,6 +27,7 @@ public class QuizServiceImpl implements QuizService {
 
   private final QuizRepository quizRepository;
   private final QuizMapper quizMapper;
+  private final QuestionMapper questionMapper;
 
   
 	private void validateQuizRequest(QuizRequestDto quizRequestDto) {
@@ -71,6 +77,19 @@ public class QuizServiceImpl implements QuizService {
 		quizToUpdate.setName(newName);
 		
 		return quizMapper.entityToDto(quizRepository.saveAndFlush(quizToUpdate));
+	}
+
+	@Override
+	public QuestionResponseDto randomQuizQuestion(Long id) {
+		Quiz selectedQuiz = getQuiz(id);
+		List<Question> questions = selectedQuiz.getQuestions();
+		if (questions == null || questions.isEmpty()) {
+	        throw new NotFoundException("No questions found for Quiz ID: " + id);
+	    }
+		int randomIndex = ThreadLocalRandom.current().nextInt(questions.size());
+	    Question randomQuestion = questions.get(randomIndex);
+	    
+		return questionMapper.entityToDto(randomQuestion);
 	}
 
 }
