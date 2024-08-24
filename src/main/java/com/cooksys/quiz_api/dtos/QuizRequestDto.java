@@ -14,7 +14,7 @@ public class QuizRequestDto {
 
 	  private String name;
 
-	  private List<AnswerResponseDto> answers;
+	  private List<QuestionRequestDto> questions;
 
 	
 }
