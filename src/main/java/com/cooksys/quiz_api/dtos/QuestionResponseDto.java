@@ -15,5 +15,4 @@ public class QuestionResponseDto {
 
   private List<AnswerResponseDto> answers;
   
-
 }

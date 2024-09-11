@@ -11,12 +11,15 @@ import com.cooksys.quiz_api.dtos.QuestionRequestDto;
 import com.cooksys.quiz_api.dtos.QuestionResponseDto;
 import com.cooksys.quiz_api.dtos.QuizRequestDto;
 import com.cooksys.quiz_api.dtos.QuizResponseDto;
+import com.cooksys.quiz_api.entities.Answer;
 import com.cooksys.quiz_api.entities.Question;
 import com.cooksys.quiz_api.entities.Quiz;
 import com.cooksys.quiz_api.exceptions.BadRequestException;
 import com.cooksys.quiz_api.exceptions.NotFoundException;
 import com.cooksys.quiz_api.mappers.QuestionMapper;
 import com.cooksys.quiz_api.mappers.QuizMapper;
+import com.cooksys.quiz_api.repositories.AnswerRepository;
+import com.cooksys.quiz_api.repositories.QuestionRepository;
 import com.cooksys.quiz_api.repositories.QuizRepository;
 import com.cooksys.quiz_api.services.QuizService;
 
@@ -27,6 +30,8 @@ import lombok.AllArgsConstructor;
 public class QuizServiceImpl implements QuizService {
 
 	private final QuizRepository quizRepository;
+	private final QuestionRepository questionRepository;
+	private final AnswerRepository answerRepository;
 	private final QuizMapper quizMapper;
 	private final QuestionMapper questionMapper;
 
@@ -58,8 +63,20 @@ public class QuizServiceImpl implements QuizService {
 	@Override
 	public QuizResponseDto createQuiz(QuizRequestDto quizRequestDto) {
 		validateQuizRequest(quizRequestDto);
-		Quiz quizToSave = quizMapper.requestDtoToEntity(quizRequestDto);
-		return quizMapper.entityToDto(quizRepository.saveAndFlush(quizToSave));
+		Quiz quiz = quizMapper.requestDtoToEntity(quizRequestDto);
+		quizRepository.saveAndFlush(quiz);
+		List<Question> questions = quiz.getQuestions();
+			
+			for (Question question : questions) {
+				question.setQuiz(quiz);
+				questionRepository.saveAndFlush(question);
+				
+				for (Answer answer : question.getAnswers()) {
+					answer.setQuestion(question);
+					answerRepository.saveAndFlush(answer);
+				}
+			}
+		return quizMapper.entityToDto(quizRepository.saveAndFlush(quiz));
 	}
 
 	@Override

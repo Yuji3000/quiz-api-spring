@@ -24,7 +24,7 @@ public class Question {
   private String text;
 
   @ManyToOne
-  @JoinColumn(name = "quiz_id")
+  @JoinColumn
   private Quiz quiz;
 
   @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)

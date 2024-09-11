@@ -23,7 +23,7 @@ public class Answer {
   private boolean correct = false;
 
   @ManyToOne
-  @JoinColumn(name = "question_id")
+  @JoinColumn
   private Question question;
 
 }
